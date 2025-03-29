@@ -1,4 +1,4 @@
-# [Terraform Infrastructure Setup]((https://secsys.pages.dev/posts/terraform)
+# [Terraform Infrastructure Setup](https://secsys.pages.dev/posts/terraform)
 
 ## 🚀 Overview
 This repository contains Terraform configurations to deploy infrastructure on Proxmox. It includes the necessary files for defining providers, variables, credentials, and the main execution logic.
@@ -25,19 +25,19 @@ Ensure you have the following installed:
    ```
 2. **Plan the deployment**
    ```sh
-   terraform plan -var-file="credentials.tfvars"
+   terraform plan -var-file=terraform.tfvars"
    ```
 3. **Apply the configuration**
    ```sh
-   terraform apply -var-file="credentials.tfvars" -auto-approve
+   terraform apply -var-file="terraform.tfvars" -auto-approve
    ```
 4. **Destroy the resources (Cleanup)**
    ```sh
-   terraform destroy -var-file="credentials.tfvars" -auto-approve
+   terraform destroy -var-file="terraform.tfvars" -auto-approve
    ```
 
 ## 🔒 Security Best Practices
-- **Do not commit `credentials.tfvars` to Git** ❌
+- **Do not commit `terraform.tfvars` to Git** ❌
 - Use `.gitignore` to exclude sensitive files:
   ```sh
   echo "terraform.tfvars" >> .gitignore
