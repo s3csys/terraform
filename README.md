@@ -1,4 +1,4 @@
-# Terraform Infrastructure Setup
+# [Terraform Infrastructure Setup]((https://secsys.pages.dev/posts/terraform)
 
 ## 🚀 Overview
 This repository contains Terraform configurations to deploy infrastructure on Proxmox. It includes the necessary files for defining providers, variables, credentials, and the main execution logic.
