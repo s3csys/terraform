@@ -4,7 +4,6 @@ resource "proxmox_lxc" "debain_lxc" {
   ostemplate   = "nasp:vztmpl/debian-12-standard_12.7-1_amd64.tar.zst"
   password     = "BasicLXCContainer"
   unprivileged = true
-  unprivileged = true
 
   ssh_public_keys = <<-EOT
     ssh-rsa <public_key_1> user@example.com
