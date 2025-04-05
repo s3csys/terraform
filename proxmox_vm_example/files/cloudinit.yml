@@ -1,0 +1,19 @@
+#cloud-config
+hostname: terraform-vm
+fqdn: terraform-vm.local
+users:
+  - name: muzammil
+    sudo: ['ALL=(ALL) NOPASSWD:ALL']
+    groups: sudo
+    shell: /bin/bash
+    ssh-authorized-keys:
+      - ssh-ed25519 AAAAC3Nzaaaaniofwehfiowhfoiwenfwoinfwoizn6G3oaM03AFKinPjO
+    disable_root: false
+    ssh_pwauth: true    
+package_update: true
+package_upgrade: true
+packages:
+  - curl
+  - htop
+runcmd:
+  - echo "Welcome to your Terraform provisioned VM!" > /etc/motd
