@@ -2,7 +2,7 @@ resource "proxmox_lxc" "debain_lxc" {
   target_node  = "hulk"
   hostname     = "debian"
   ostemplate   = "nasp:vztmpl/debian-12-standard_12.7-1_amd64.tar.zst"
-  password     = "BasicLXCContainer"
+  password     = var.proxmox_lxc_password
   unprivileged = true
 
   ssh_public_keys = <<-EOT
@@ -18,7 +18,7 @@ resource "proxmox_lxc" "debain_lxc" {
   network {
     name   = "eth0"
     bridge = "vmbr0"
-    ip     = "20.20.20.150/24"
+    ip     = "XX.XX.XX.XX"
     ip6    = "auto"
   }
 }

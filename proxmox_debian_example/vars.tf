@@ -16,3 +16,8 @@ variable "proxmox_PM_API_TOKEN_SECRET" {
   sensitive = true
 }
 
+variable "proxmox_lxc_password" {
+  type = string
+  sensitive = true
+}
+
