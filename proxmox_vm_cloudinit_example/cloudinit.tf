@@ -1,8 +1,12 @@
+# 📄 cloud-init.tf - Generate and Upload Cloud-Init Config using Terraform
+# 🧠 Reads the cloud-init user-data file with dynamic variables
 data "template_file" "cloudinit_userdata" {
   template = file("${path.module}/files/cloudinit.yml")
 
   vars = {
     hostname = var.vm_name
+    vm_user  = var.vm_user 
+    ssh_key  = var.vm_ssh_key
   }
 }
 

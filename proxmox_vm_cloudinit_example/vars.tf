@@ -48,3 +48,7 @@ variable "template_name" {
 variable "proxmox_host" {
   type = string
 }
+
+variable "vm_ssh_key" {
+  type = string
+}

@@ -1,19 +1,22 @@
 #cloud-config
 hostname: terraform-vm
 fqdn: terraform-vm.local
+
 users:
-  - name: muzammil
+  - name: ${vm_user}
     sudo: ['ALL=(ALL) NOPASSWD:ALL']
-    groups: sudo
+    groups: sudo, docker
     shell: /bin/bash
     ssh-authorized-keys:
-      - ssh-ed25519 AAAAC3Nzaaaaniofwehfiowhfoiwenfwoinfwoizn6G3oaM03AFKinPjO
+      - ${ssh_key}
     disable_root: false
-    ssh_pwauth: true    
+    ssh_pwauth: false
+
 package_update: true
 package_upgrade: true
 packages:
   - curl
   - htop
+
 runcmd:
-  - echo "Welcome to your Terraform provisioned VM!" > /etc/motd
+  - echo "Welcome to your Terraform provisioned VM!" | sudo tee /etc/motd
