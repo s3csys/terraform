@@ -1,0 +1,40 @@
+#cloud-config
+hostname: terraform-vm
+fqdn: terraform-vm.local
+
+users:
+  - name: ${vm_user}
+    sudo: ['ALL=(ALL) NOPASSWD:ALL']
+    groups: sudo, docker
+    shell: /bin/bash
+    ssh-authorized-keys:
+      - ${ssh_key}
+    disable_root: false
+    ssh_pwauth: false
+
+package_update: true
+package_upgrade: true
+packages:
+  - curl
+  - htop
+  - zsh
+  - apt-transport-https
+  - ca-certificates
+  - conntrack
+  - docker.io
+
+runcmd:
+  - echo "Welcome to your Terraform provisioned VM!" | sudo tee /etc/motd
+  - sudo systemctl enable docker
+  - sudo systemctl start docker
+  - curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+  - sudo install minikube-linux-amd64 /usr/local/bin/minikube
+  - curl -LO "https://dl.k8s.io/release/$(curl -kLs https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+  - sudo install kubectl /usr/local/bin/kubectl
+  - rm kubectl minikube-linux-amd64
+  - sudo usermod -aG docker ${vm_user}
+  - echo "Minikube installed successfully!"
+  - sudo -u ${vm_user} /usr/local/bin/minikube start
+  - sudo -u ${vm_user} /usr/local/bin/minikube status
+  - sudo -u ${vm_user} /usr/local/bin/minikube kubectl -- proxy --address=0.0.0.0 --accept-hosts='^.*$'
+  - sudo -u ${vm_user} /usr/local/bin/minikube dashboard

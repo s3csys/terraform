@@ -1,0 +1,13 @@
+proxmox_PM_USER = "terraform@pve"
+proxmox_PM_API_TOKEN_ID = "terraform@pve!terraform"
+proxmox_PM_API_TOKEN_SECRET = "abcedfg-b911-abcd-1234-791ebb4337f3"
+
+vm_name = "cloudinit"
+pm_node = "PVE"
+storage_pool = "local-lvm"
+network_bridge = "vmbr0"
+template_name = "VM 5000"
+proxmox_host = "XX.XX.XX.XX"
+vm_password = "$SUPER_SECRET_PASSWORD"
+vm_user = "$USER"
+vm_ssh_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIaaaaaaaaaaaaaaa/qqa9Mtkzn6G3oaM03AFKinPjO @public_key"
