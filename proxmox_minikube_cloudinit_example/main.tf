@@ -1,5 +1,5 @@
 resource "proxmox_vm_qemu" "minikube_cloudinit" {
-    desc        = "testing the terraform and cloudinit"
+    desc = "<div align='center'><a href='https://secsys.pages.dev' target='_blank' rel='noopener noreferrer'><img src='https://secsys.pages.dev/assets/img/logo.png' alt='SecSys Logo' style='width:41px;height:41px;border-radius:6px;margin:2px 0;'/></a><h2 style='font-size: 10px; margin: 4px 0;'>Minikube Setup</h2><div style='margin: 4px 0; font-size: 10px;'><span>🌐 <a href='https://secsys.pages.dev' target='_blank' rel='noopener noreferrer' style='text-decoration: none; color: #00617f;'>SecSys</a></span> • <span>🔗 <a href='https://github.com/s3csys' target='_blank' rel='noopener noreferrer' style='text-decoration: none; color: #00617f;'>GitHub</a></span></div></div>"
     name        = var.vm_name
     target_node = var.pm_node
     clone       = var.template_name     # The template name to clone this vm from
@@ -45,7 +45,7 @@ resource "proxmox_vm_qemu" "minikube_cloudinit" {
 
     # Setup the ip address using cloud-init.
     boot = "order=scsi0"
-    ipconfig0 = "ip=20.20.20.150/24,gw=20.20.20.1"
+    ipconfig0 = "ip=XX.XX.XX.XX/24,gw=XX.XX.XX.1"
     #ipconfig0 = "ip=dhcp"
     serial {
       id   = 0
