@@ -1,0 +1,84 @@
+#cloud-config
+hostname: kube
+fqdn: kube.local
+
+users:
+  - name: ${vm_user}
+    sudo: ['ALL=(ALL) NOPASSWD:ALL']
+    groups: sudo, docker
+    shell: /bin/bash
+    ssh-authorized-keys:
+      - ${ssh_key}
+    disable_root: false
+    ssh_pwauth: false
+
+package_update: true
+package_upgrade: true
+packages:
+  - curl
+  - apt-transport-https
+  - ca-certificates
+  - gnupg
+  - lsb-release
+  - containerd
+  - software-properties-common
+
+write_files:
+  - path: /usr/local/bin/kube-init.sh
+    permissions: '0755'
+    owner: ${vm_user}:${vm_user}
+    content: |
+      #!/bin/bash
+      echo "Initializing Kubernetes control plane..."
+      sudo kubeadm init --pod-network-cidr=10.10.10.0/16
+
+      echo "Setting up kubeconfig for user: ${vm_user}"
+      mkdir -p /home/${vm_user}/.kube
+      sudo cp -i /etc/kubernetes/admin.conf /home/${vm_user}/.kube/config
+      sudo chown ${vm_user}:${vm_user} /home/${vm_user}/.kube/config
+      echo 'export KUBECONFIG=/home/${vm_user}/.kube/config' >> /home/${vm_user}/.bashrc
+
+      kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.27.0/manifests/calico.yaml
+      echo "Kubernetes control plane initialized. Run 'kubectl get nodes or kubectl get pods -n kube-system' to verify."      
+
+
+
+runcmd:
+  - echo "[+] Disabling swap"
+  - swapoff -a
+  - sed -i '/ swap / s/^/#/' /etc/fstab
+
+  - echo "[+] Enabling required kernel modules"
+  - modprobe overlay
+  - modprobe br_netfilter
+
+  - echo "[+] Writing sysctl config"
+  - |
+    cat <<EOF | tee /etc/sysctl.d/k8s.conf
+    net.bridge.bridge-nf-call-iptables  = 1
+    net.bridge.bridge-nf-call-ip6tables = 1
+    net.ipv4.ip_forward                 = 1
+    EOF
+  - sysctl --system
+
+  - echo "[+] Creating containerd config"
+  - mkdir -p /etc/containerd
+  - containerd config default | tee /etc/containerd/config.toml > /dev/null
+  - sed -i 's/SystemdCgroup = false/SystemdCgroup = true/' /etc/containerd/config.toml
+  - systemctl restart containerd
+  - systemctl enable containerd
+
+  - echo "[+] Adding Kubernetes apt repo"
+  - mkdir -p -m 755 /etc/apt/keyrings
+  - curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+  - chmod 644 /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+  - |
+    echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /' | tee /etc/apt/sources.list.d/kubernetes.list
+  - chmod 644 /etc/apt/sources.list.d/kubernetes.list
+
+  - echo "[+] Installing kubeadm, kubelet, kubectl"
+  - apt update
+  - apt install -y kubelet kubeadm kubectl
+  - apt-mark hold kubelet kubeadm kubectl
+
+  - echo "[+] Done. Login and run ~/kube-init.sh to initialize the control plane."
