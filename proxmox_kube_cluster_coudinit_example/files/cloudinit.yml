@@ -22,6 +22,7 @@ packages:
   - lsb-release
   - containerd
   - software-properties-common
+  - apache2-utils
 
 write_files:
   - path: /usr/local/bin/kube-init.sh
